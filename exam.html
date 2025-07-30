@@ -16,12 +16,14 @@
     </form>
   </div>
   <script src="js/questions.js"></script>
-  <script>
-  if (!localStorage.getItem("userName")) {
-    alert("يجب تسجيل الدخول أولاً");
+<script>
+  const email = localStorage.getItem("userEmail");
+  if (!email || !email.includes("@")) {
+    alert("يجب تسجيل الدخول بحساب Google أولاً");
     window.location.href = "index.html";
   }
 </script>
+
 
 </body>
 </html>
