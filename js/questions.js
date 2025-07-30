@@ -127,6 +127,14 @@ const questions = [
 ];
 
 function startTimer() {
+  const user = localStorage.getItem("userEmail");
+  if (!user || !user.includes("@")) {
+    alert("يجب تسجيل الدخول أولاً.");
+    location.href = "index.html";
+    return;
+  }
+
+  // تايمر الامتحان
   let min = 60, sec = 0;
   const timer = document.getElementById("time");
   const interval = setInterval(() => {
@@ -146,6 +154,7 @@ function startTimer() {
 
   renderQuestions();
 }
+
 
 function renderQuestions() {
   const container = document.getElementById("questionsContainer");
