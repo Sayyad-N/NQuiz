@@ -2,61 +2,72 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>تسجيل الدخول - اختبار البرمجة</title>
-  <link rel="stylesheet" href="css/style.css">
-  <script src="js/protect.js"></script>
+  <title>تسجيل الدخول</title>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+  import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+  const firebaseConfig = {
+    apiKey: "AIzaSyAwAEeLR4JcN1E259nmhkH2aqLJRAITUR4",
+    authDomain: "nquiz-b566f.firebaseapp.com",
+    projectId: "nquiz-b566f",
+    storageBucket: "nquiz-b566f.appspot.com",
+    messagingSenderId: "517389586499",
+    appId: "1:517389586499:web:d4e3b751940a3d608844f6",
+    measurementId: "G-460T0FQBVY"
+  };
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAwAEeLR4JcN1E259nmhkH2aqLJRAITUR4",
-      authDomain: "nquiz-b566f.firebaseapp.com",
-      projectId: "nquiz-b566f",
-      storageBucket: "nquiz-b566f.appspot.com",
-      messagingSenderId: "517389586499",
-      appId: "1:517389586499:web:d4e3b751940a3d608844f6",
-      measurementId: "G-460T0FQBVY"
-    };
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    async function loginUser(event) {
-      event.preventDefault();
-      const email = document.getElementById("email").value.trim().toLowerCase();
-      const password = document.getElementById("password").value.trim();
-
-      const usersRef = collection(db, "users");
-      const snapshot = await getDocs(usersRef);
-      let found = false;
-
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        if (data.email === email && data.password === password) {
-          found = true;
-          localStorage.setItem("userName", data.name || email);
-          window.location.href = "exam.html";
-        }
+  window.signInWithGoogle = () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const user = result.user;
+        // خزّن بيانات الدخول في localStorage
+        localStorage.setItem("userName", user.displayName);
+        localStorage.setItem("userEmail", user.email);
+        window.location.href = "exam.html";
+      })
+      .catch((error) => {
+        alert("فشل تسجيل الدخول: " + error.message);
       });
+  };
+</script>
 
-      if (!found) {
-        alert("بيانات الدخول غير صحيحة. تأكد من الإيميل وكلمة المرور.");
-      }
+
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: #f9f3ea;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
-
-    window.loginUser = loginUser;
-  </script>
+    .login-box {
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    button {
+      background-color: #db4437;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>تسجيل الدخول إلى الاختبار</h1>
-    <form onsubmit="loginUser(event)">
-      <input type="email" id="email" placeholder="البريد الإلكتروني" required>
-      <input type="password" id="password" placeholder="كلمة المرور" required>
-      <button type="submit">دخول</button>
-    </form>
+  <div class="login-box">
+    <h2>سجل دخولك بحساب Google</h2>
+    <button onclick="signInWithGoogle()">تسجيل الدخول باستخدام Google</button>
   </div>
 </body>
 </html>
