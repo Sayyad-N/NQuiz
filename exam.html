@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>الاختبار</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/protect.js"></script>
+</head>
+<body onload="startTimer()">
+  <div class="container">
+    <h2>الاختبار الشامل في البرمجة</h2>
+    <div id="timer">الوقت المتبقي: <span id="time">60:00</span></div>
+    <form id="examForm" onsubmit="submitExam(event)">
+      <div id="questionsContainer"></div>
+      <button type="submit">إرسال الإجابات</button>
+    </form>
+  </div>
+  <script src="js/questions.js"></script>
+  <script>
+  if (!localStorage.getItem("userName")) {
+    alert("يجب تسجيل الدخول أولاً");
+    window.location.href = "index.html";
+  }
+</script>
+
+</body>
+</html>
