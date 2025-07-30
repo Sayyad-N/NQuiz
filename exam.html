@@ -5,28 +5,117 @@
   <title>الاختبار</title>
   <link rel="stylesheet" href="css/style.css">
   <script src="js/protect.js"></script>
+  <script>
+    // منع الدخول بدون تسجيل
+    const email = localStorage.getItem("userEmail");
+    if (!email || !email.includes("@")) {
+      alert("يجب تسجيل الدخول أولاً");
+      window.location.href = "index.html";
+    }
+  </script>
 </head>
 <body onload="startTimer()">
   <div class="container">
     <h2>الاختبار الشامل في البرمجة</h2>
     <div id="timer">الوقت المتبقي: <span id="time">60:00</span></div>
-<form id="examForm" onsubmit="submitExam(event)"  
-      action="https://formspree.io/f/myzppeyz"
-      method="POST">
+
+    <form id="examForm"
+          onsubmit="submitExam(event)"
+          action="https://formspree.io/f/myzppeyz"
+          method="POST"
+          target="hidden_iframe">
 
       <div id="questionsContainer"></div>
+
       <button type="submit">إرسال الإجابات</button>
     </form>
+
+    <iframe name="hidden_iframe" style="display:none;"></iframe>
   </div>
+
   <script src="js/questions.js"></script>
-<script>
-  const email = localStorage.getItem("userEmail");
-  if (!email || !email.includes("@")) {
-    alert("يجب تسجيل الدخول بحساب Google أولاً");
-    window.location.href = "index.html";
-  }
-</script>
 
+  <script>
+    function startTimer() {
+      let min = 60, sec = 0;
+      const timer = document.getElementById("time");
+      const interval = setInterval(() => {
+        if (sec === 0) {
+          if (min === 0) {
+            clearInterval(interval);
+            document.getElementById("examForm").submit();
+            return;
+          }
+          min--;
+          sec = 59;
+        } else {
+          sec--;
+        }
+        timer.textContent = `${min}:${sec < 10 ? '0' : ''}${sec}`;
+      }, 1000);
 
+      renderQuestions();
+    }
+
+    function renderQuestions() {
+      const container = document.getElementById("questionsContainer");
+      questions.forEach((q, i) => {
+        const block = document.createElement("div");
+        block.className = "question-block";
+        block.innerHTML = `<p><strong>${i + 1}- ${q.q}</strong></p>` +
+          q.options.map(opt => `
+            <label>
+              <input type="radio" name="q${i}" value="${opt}" required> ${opt}
+            </label><br>
+          `).join("");
+        container.appendChild(block);
+      });
+    }
+
+    function submitExam(event) {
+      event.preventDefault();
+      let score = 0;
+      const form = document.getElementById("examForm");
+
+      // احسب النتيجة
+      questions.forEach((q, i) => {
+        const selected = document.querySelector(`input[name="q${i}"]:checked`);
+        if (selected && selected.value === q.answer) {
+          score++;
+        }
+
+        const answerInput = document.createElement("input");
+        answerInput.type = "hidden";
+        answerInput.name = `Answer ${i + 1}`;
+        answerInput.value = selected ? selected.value : "لم يجب";
+        form.appendChild(answerInput);
+      });
+
+      // أضف النتيجة
+      const scoreInput = document.createElement("input");
+      scoreInput.type = "hidden";
+      scoreInput.name = "Score";
+      scoreInput.value = `${score} من ${questions.length}`;
+      form.appendChild(scoreInput);
+
+      // أضف البريد الإلكتروني
+      const emailInput = document.createElement("input");
+      emailInput.type = "hidden";
+      emailInput.name = "Email";
+      emailInput.value = localStorage.getItem("userEmail") || "غير معروف";
+      form.appendChild(emailInput);
+
+      // إرسال النموذج
+      form.submit();
+
+      // بعد ثواني: عرض النتيجة وتوجيه المستخدم
+      setTimeout(() => {
+        alert(`✅ تم إرسال إجاباتك بنجاح\\n📊 نتيجتك: ${score} من ${questions.length}`);
+        localStorage.removeItem("userName");
+        localStorage.removeItem("userEmail");
+        window.location.href = "index.html";
+      }, 1000);
+    }
+  </script>
 </body>
 </html>
