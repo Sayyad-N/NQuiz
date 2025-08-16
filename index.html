@@ -7,16 +7,15 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
   import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
-  const firebaseConfig = {
-    //دخل البيانات دي من الاعدادا تبع قاعده جوجل 
-    apiKey: "API_KEY_HERE",
-    authDomain: "YOUR_DOMAIN_FROM_RIFEBASE",
-    projectId: "PROJECT_ID",
-    storageBucket: "STORAGE_BUCKET",
-    messagingSenderId: "ID",
-    appId: "APP_ID",
-    measurementId: "ID"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyAwAEeLR4JcN1E259nmhkH2aqLJRAITUR4",
+  authDomain: "nquiz-b566f.firebaseapp.com",
+  projectId: "nquiz-b566f",
+  storageBucket: "nquiz-b566f.firebasestorage.app",
+  messagingSenderId: "517389586499",
+  appId: "1:517389586499:web:d4e3b751940a3d608844f6",
+  measurementId: "G-460T0FQBVY"
+};
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
